@@ -1,0 +1,29 @@
+/* header */
+.Todo header {
+  background-color: #4a90e2;
+}
+
+.Todo nav {
+  margin: 0 auto;
+}
+
+.Todo nav li {
+  width: 220px;
+  height: 28px;
+  padding: 24px;
+  text-align: center;
+}
+
+.Todo nav li .nav-label {
+  width: 160px;
+}
+
+.Todo nav li.active .nav-label {
+  border: 5px solid #00408b;
+}
+
+/* width limit */
+.Todo .container {
+  width: 620px;
+  margin: 0 auto;
+}
