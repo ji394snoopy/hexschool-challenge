@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import * as SIcons from '@fortawesome/fontawesome-free-solid';
+import * as RIcons from '@fortawesome/fontawesome-free-regular';
 
 function StatusBar(props) {
   return (
-    <div>
-      <span classNmae="!props.deadline&&'invisible'">
-        {/* calendar icon */}
+    <div className="statusBar">
+      <span
+        className={(!props.status.deadline ? 'invisible' : '') + ' calendar'}
+      >
+        <FontAwesomeIcon icon={RIcons.faCalendarAlt} size="1x" />
       </span>
-      <span classNmae="!props.deadline&&'invisible'">{props.deadline}</span>
-      <span classNmae="!props.files&&'invisible'">{/* file icon */}</span>
-      <span classNmae="!props.comment&&'invisible'">{/* comment icon */}</span>
+      <span className={!props.status.deadline ? 'invisible' : ''}>
+        {props.status.deadline}
+      </span>
+      <span className={(!props.status.files ? 'invisible' : '') + ' files'}>
+        <FontAwesomeIcon icon={RIcons.faFileAlt} size="1x" />
+      </span>
+      <span className={(!props.status.comment ? 'invisible' : '') + ' comment'}>
+        <FontAwesomeIcon icon={RIcons.faCommentDots} size="1x" />
+      </span>
     </div>
   );
 }
@@ -16,67 +27,80 @@ function StatusBar(props) {
 class StatusEdit extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      deadlineDate: '',
-      deadlineTime: '',
-      files: null,
-      comment: ''
-    };
-  }
-  componentDidMount() {
-    const dtArr = (this.props.deadline || '').split(' ');
+    const dtArr = (this.props.status.deadline || '').split(' ');
     const d = (dtArr && dtArr[0]) || '';
     const t = (dtArr && dtArr.length >= 2 && dtArr[1]) || '';
-    this.setState({
+    this.state = {
       deadlineDate: d,
       deadlineTime: t,
-      files: this.props.files || null,
-      comment: this.props.comment || ''
-    });
+      files: this.props.status.files || undefined,
+      comment: this.props.status.comment || ''
+    };
   }
+
   render() {
     return (
       <div>
-        {/* edit */}
-        <div>
+        <div className="statusEdit">
           <div>
-            <span>{/* calendar icon */}</span> <b>DeadLine</b>
+            <div>
+              <span className="calendar">
+                <FontAwesomeIcon icon={RIcons.faCalendarAlt} size="1x" />
+              </span>
+              <b>DeadLine</b>
+            </div>
             <input
               type="text"
-              value="{this.state.deadlineDate}"
+              value={this.state.deadlineDate}
               placeholder="yyyy/MM/dd"
-              className="inline-input"
             />
             <input
               type="text"
-              value="{this.state.deadlineTime}"
+              value={this.state.deadlineTime}
               placeholder="HH:mm"
-              className="inline-input"
             />
           </div>
           <div>
-            <span>{/* file icon */}</span> <b>File</b>
-            <label htmlFor="addFile">
-              <a>{/* add icon */}</a>
+            <div>
+              <span className="files">
+                <FontAwesomeIcon icon={RIcons.faFileAlt} size="1x" />
+              </span>
+              <b>File</b>
+            </div>
+            <label htmlFor={this.props.key + 'addFile'} className="addFile">
+              <a className="plus-square">
+                <FontAwesomeIcon icon={SIcons.faPlusSquare} size="3x" />
+              </a>
               <input
                 type="file"
-                value="this.state.files"
-                name="addFile"
+                value={this.state.files}
+                id={this.props.key + 'addFile'}
                 className="invisible"
               />
             </label>
           </div>
           <div>
-            <span>{/* comment icon */}</span> <b>Comment</b>
-            <textarea value="this.state.comment" />
+            <div>
+              <span className="comment">
+                <FontAwesomeIcon icon={RIcons.faCommentDots} size="1x" />
+              </span>
+              <b>Comment</b>
+            </div>
+            <textarea
+              value={this.state.comment}
+              placeholder="Type your memo here…"
+            />
           </div>
         </div>
-        {/* btns */}
-        <div>
-          <div className="cancel" onClick="this.props.cancel()">
+
+        <div className="btns">
+          <div className="cancel" onClick={this.props.cancel}>
             X Cancel
           </div>
-          <div className="add" onClick="this.update">
+          <div
+            className="add"
+            // onClick="this.update"
+          >
             + Add Task
           </div>
         </div>
@@ -88,46 +112,88 @@ class StatusEdit extends Component {
 class Task extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      task: {}
+    console.log(props.task);
+    this.state = props.task || {
+      taskName: 'Type Something Here…',
+      isDone: false,
+      isEdit: false,
+      isImportant: false,
+      status: {
+        deadline: null,
+        files: null,
+        comment: ''
+      }
     };
   }
 
-  componentDidMount() {
-    this.setState({
-      task: this.props.task || {
-        taskName: 'Type Something Here…',
-        isDone: false,
-        isEdit: false,
-        isImportant: false,
-        status: {
-          deadLine: null,
-          files: null,
-          comment: ''
-        }
-      }
-    });
+  cancelEdit() {
+    this.setState({ isEdit: false });
+  }
+
+  update(k, v) {
+    let tmp = {};
+    tmp[k] = v;
+    this.setState(tmp);
+  }
+
+  updates(ks, vs) {
+    let tmp = {};
+    ks.forEach((k, i) => (tmp[k] = vs[i]));
+    this.setState(tmp);
   }
 
   render() {
     return (
-      <div className="{(this.props.isImportant?'important':'')+' task'}">
-        <div>
-          <input
-            type="checkbox"
-            value="{!!this.props.isDone}"
-            onChange="()=> this.props.onChange('isDone')"
-          />
-          <span className="this.props.isDone&&'del'">
-            {this.props.taskName}
+      <div className={(this.state.isImportant ? 'active' : '') + ' Task'}>
+        <div className="taskHeader">
+          <label
+            htmlFor={this.props.id + 'isDone'}
+            className={(this.state.isDone ? 'active' : '') + ' check-square'}
+          >
+            <FontAwesomeIcon
+              icon={this.state.isDone ? SIcons.faCheckSquare : RIcons.faSquare}
+              size="1x"
+            />
+            <input
+              id={this.props.id + 'isDone'}
+              type="checkbox"
+              value={!!this.state.isDone}
+              onClick={() => this.update('isDone', !this.state.isDone)}
+            />
+          </label>
+
+          <span className={(this.state.isDone ? 'del' : '') + ' title'}>
+            {this.state.taskName}
           </span>
-          <a className="{this.props.isImportant&&'active'}">
-            {/* important icon */}
-          </a>
-          <a className="{this.props.isEdit&&'active'}">{/* edit icon */}</a>
+          <div className="icons">
+            <a
+              className={(this.state.isImportant ? 'active' : '') + ' star'}
+              onClick={() =>
+                this.update('isImportant', !this.state.isImportant)
+              }
+            >
+              <FontAwesomeIcon
+                icon={this.state.isImportant ? SIcons.faStar : RIcons.faStar}
+                size="1x"
+              />
+            </a>
+            <a
+              className={(this.state.isEdit ? 'active' : '') + ' edit'}
+              onClick={() => this.update('isEdit', !this.state.isEdit)}
+            >
+              <FontAwesomeIcon icon={SIcons.faPencilAlt} size="1x" />
+            </a>
+          </div>
         </div>
-        {!!this.props.isEdit && <StatusEdit status="{this.props.status||{}}" />}
-        {!this.props.isEdit && <StatusBar status="{this.props.status||{}}" />}
+        {this.state.isEdit ? (
+          <StatusEdit
+            status={this.state.status || {}}
+            id={this.props.id}
+            cancel={() => this.update('isEdit', false)}
+          />
+        ) : (
+          <StatusBar status={this.state.status || {}} />
+        )}
       </div>
     );
   }

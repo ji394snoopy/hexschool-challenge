@@ -5,7 +5,7 @@ import App from './App';
 import Todo from './Todo';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-ReactDOM.render(<Todo />, document.getElementById('todo'));
+// ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Todo />, document.getElementById('hexschool'));
 
 registerServiceWorker();

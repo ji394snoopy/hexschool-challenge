@@ -1,3 +1,18 @@
+body {
+  font-size: 12px;
+  background-color: #e1e1e1;
+}
+input {
+  border: none;
+  border-radius: 5px;
+  margin-right: 5px;
+  padding: 5px 10px;
+}
+
+.invisible {
+  display: none;
+}
+
 /* header */
 .Todo header {
   background-color: #4a90e2;
@@ -5,25 +20,178 @@
 
 .Todo nav {
   margin: 0 auto;
+  text-align: center;
+}
+
+.Todo nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .Todo nav li {
-  width: 220px;
-  height: 28px;
-  padding: 24px;
+  width: 160px;
+  height: 1.5em;
+  padding: 1em 0;
+  display: inline-block;
   text-align: center;
 }
 
 .Todo nav li .nav-label {
   width: 160px;
+  font-weight: 600;
+  font-size: 1.2em;
+  color: #00408b;
+  line-height: 1.5em;
 }
 
 .Todo nav li.active .nav-label {
-  border: 5px solid #00408b;
+  color: #fff;
+}
+
+.Todo nav li.active {
+  border-bottom: 5px solid #00408b;
 }
 
 /* width limit */
 .Todo .container {
-  width: 620px;
-  margin: 0 auto;
+  width: 520px;
+  margin: 12px auto;
+}
+
+/* Task */
+.Task {
+  width: 100%;
+  background: #f2f2f2;
+  border-radius: 5px 5px 0 0;
+  margin: 10px 0;
+  vertical-align: middle;
+  box-shadow: 0 4px 4px 0 #c8c8c8;
+}
+
+.Task.active {
+  background: #fff2dc;
+}
+
+.Task .taskHeader,
+.Task .statusEdit,
+.Task .statusBar {
+  padding: 0.7em;
+}
+
+.Task input[type='checkbox'] {
+  display: none;
+}
+
+.Task .del {
+  text-decoration-line: line-through;
+}
+
+.Task .title {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin: 5px 0.7em;
+}
+
+/* icons */
+.Task .star.active {
+  color: #f5a623;
+}
+
+.Task .edit.active {
+  color: #4a90e2;
+}
+
+.Task .check-square.active {
+  color: #4a90e2;
+}
+
+.Task .icons {
+  float: right;
+}
+
+.Task .star,
+.Task .edit,
+.Task .check-square {
+  font-size: 1.5em;
+  margin: 5px 0.7em;
+}
+
+.Task .statusEdit .plus-square {
+  color: #757575;
+}
+.Task .calendar,
+.Task .files,
+.Task .comment {
+  margin-right: 5px;
+}
+/* status bar */
+.Task .statusBar {
+  padding-top: 0.7em;
+  padding-left: 4.5em;
+  color: #757575;
+}
+.Task .statusBar span {
+  margin: 5px;
+}
+
+/* status edit */
+.Task .statusEdit {
+  padding-left: 5em;
+  border-top: 2px solid #c8c8c8;
+}
+
+.Task .statusEdit > div {
+  margin: 5px 0;
+}
+
+.Task .statusEdit > div > * {
+  margin: 5px;
+}
+
+.Task .statusEdit textarea {
+  width: 400px;
+  height: 100px;
+  resize: none;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+}
+
+.Task .addFile {
+  width: 3em;
+  height: 3em;
+}
+
+/* btns */
+.Task .btns {
+  display: flex;
+}
+
+.Task .btns > div {
+  flex: 1;
+  text-align: center;
+  padding: 1em;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+.Task .btns > div.cancel {
+  background-color: #fff;
+  color: #d0021b;
+}
+
+.Task .btns > div.cancel:hover {
+  background-color: #fdfdfd;
+}
+
+.Task .btns > div.add {
+  background-color: #4a90e2;
+  color: #fff;
+}
+.Task .btns > div.add:hover {
+  background-color: #3982d7;
+}
+
+.ps {
+  color: #757575;
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Task from './conponents/Task';
+import './style/Todo.css';
 
 const init_tasks = [
   {
@@ -9,7 +10,7 @@ const init_tasks = [
     isEdit: false,
     isImportant: false,
     status: {
-      deadLine: null,
+      deadline: null,
       files: null,
       comment: 'hello world !'
     }
@@ -18,12 +19,12 @@ const init_tasks = [
     taskName: 'this is a task',
     isDone: false,
     isChecked: false,
-    isEdit: false,
+    isEdit: true,
     isImportant: true,
     status: {
-      deadLine: null,
+      deadline: '5/19',
       files: null,
-      comment: 'hello world !'
+      comment: ''
     }
   },
   {
@@ -33,7 +34,7 @@ const init_tasks = [
     isEdit: false,
     isImportant: false,
     status: {
-      deadLine: null,
+      deadline: null,
       files: null,
       comment: 'hello world !'
     }
@@ -57,21 +58,24 @@ class Todo extends Component {
   toggleCheck() {}
 
   render() {
-    const taskList = this.state.tasks.map(t => <Task task="{t}" />);
+    const taskList = this.state.tasks.map((t, i) => (
+      <Task key={i} task={t} id={i} />
+    ));
+    const undoCnt = this.state.tasks.filter(t => !t.isDone).length;
 
     return (
       <div className="Todo">
         <header>
           <nav>
             <ul>
-              <li>
-                <span className="nav-label">My Tasks</span>
+              <li className="active">
+                <a className="nav-label">My Tasks</a>
               </li>
               <li>
-                <span className="nav-label">In Progress</span>
+                <a className="nav-label">In Progress</a>
               </li>
               <li>
-                <span className="nav-label">Completed</span>
+                <a className="nav-label">Completed</a>
               </li>
             </ul>
           </nav>
@@ -80,6 +84,7 @@ class Todo extends Component {
         <section className="container">
           <div className="add" />
           <div>{taskList}</div>
+          <div className="ps">{undoCnt} tasks left</div>
         </section>
       </div>
     );
