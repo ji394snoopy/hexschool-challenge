@@ -36,6 +36,20 @@ class StatusEdit extends Component {
       files: this.props.status.files || undefined,
       comment: this.props.status.comment || ''
     };
+
+    // need to bind this to the function by ourselves
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    this.setState({
+      [e.target.name]:
+        e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    });
+  }
+
+  save() {
+    this.props.update(this.state);
   }
 
   render() {
@@ -51,13 +65,17 @@ class StatusEdit extends Component {
             </div>
             <input
               type="text"
+              name="deadlineDate"
               value={this.state.deadlineDate}
               placeholder="yyyy/MM/dd"
+              onChange={this.handleChange}
             />
             <input
               type="text"
+              name="deadlineTime"
               value={this.state.deadlineTime}
               placeholder="HH:mm"
+              onChange={this.handleChange}
             />
           </div>
           <div>
@@ -87,8 +105,10 @@ class StatusEdit extends Component {
               <b>Comment</b>
             </div>
             <textarea
+              name="comment"
               value={this.state.comment}
               placeholder="Type your memo here…"
+              onChange={this.handleChange}
             />
           </div>
         </div>
@@ -97,11 +117,8 @@ class StatusEdit extends Component {
           <div className="cancel" onClick={this.props.cancel}>
             X Cancel
           </div>
-          <div
-            className="add"
-            // onClick="this.update"
-          >
-            + Add Task
+          <div className="add" onClick={() => this.save()}>
+            + Save
           </div>
         </div>
       </div>
@@ -112,9 +129,8 @@ class StatusEdit extends Component {
 class Task extends Component {
   constructor(props) {
     super(props);
-    console.log(props.task);
     this.state = props.task || {
-      taskName: 'Type Something Here…',
+      taskName: '',
       isDone: false,
       isEdit: false,
       isImportant: false,
@@ -147,7 +163,7 @@ class Task extends Component {
       <div className={(this.state.isImportant ? 'active' : '') + ' Task'}>
         <div className="taskHeader">
           <label
-            htmlFor={this.props.id + 'isDone'}
+            htmlFor={this.state.id + 'isDone'}
             className={(this.state.isDone ? 'active' : '') + ' check-square'}
           >
             <FontAwesomeIcon
@@ -155,15 +171,15 @@ class Task extends Component {
               size="1x"
             />
             <input
-              id={this.props.id + 'isDone'}
+              id={this.state.id + 'isDone'}
               type="checkbox"
               value={!!this.state.isDone}
-              onClick={() => this.update('isDone', !this.state.isDone)}
+              onClick={() => this.props.updateStatus(this.state, 'isDone', !this.state.isDone)}
             />
           </label>
 
-          <span className={(this.state.isDone ? 'del' : '') + ' title'}>
-            {this.state.taskName}
+          <span className={(this.state.isDone ? 'complete ' : '') + 'title'}>
+            {this.state.taskName || 'Type Something Here…'}
           </span>
           <div className="icons">
             <a
@@ -179,7 +195,7 @@ class Task extends Component {
             </a>
             <a
               className={(this.state.isEdit ? 'active' : '') + ' edit'}
-              onClick={() => this.update('isEdit', !this.state.isEdit)}
+              onClick={() => this.update('isEdit', true)}
             >
               <FontAwesomeIcon icon={SIcons.faPencilAlt} size="1x" />
             </a>
@@ -190,6 +206,7 @@ class Task extends Component {
             status={this.state.status || {}}
             id={this.props.id}
             cancel={() => this.update('isEdit', false)}
+            update={data => this.props.updateTask(this.state, data)}
           />
         ) : (
           <StatusBar status={this.state.status || {}} />

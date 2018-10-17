@@ -83,14 +83,15 @@ input {
   display: none;
 }
 
-.Task .del {
+.Task .complete {
   text-decoration-line: line-through;
+  color: #9b9b9b;
 }
 
 .Task .title {
-  font-size: 1.2em;
-  font-weight: 600;
-  margin: 5px 0.7em;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 5px 0.7rem;
 }
 
 /* icons */

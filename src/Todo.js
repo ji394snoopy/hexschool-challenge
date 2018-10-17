@@ -1,45 +1,7 @@
 import React, { Component } from 'react';
-import Task from './conponents/Task';
+import Task from './components/Task';
 import './style/Todo.css';
-
-const init_tasks = [
-  {
-    taskName: 'this is a task',
-    isDone: false,
-    isChecked: true,
-    isEdit: false,
-    isImportant: false,
-    status: {
-      deadline: null,
-      files: null,
-      comment: 'hello world !'
-    }
-  },
-  {
-    taskName: 'this is a task',
-    isDone: false,
-    isChecked: false,
-    isEdit: true,
-    isImportant: true,
-    status: {
-      deadline: '5/19',
-      files: null,
-      comment: ''
-    }
-  },
-  {
-    taskName: 'this is a task',
-    isDone: true,
-    isChecked: false,
-    isEdit: false,
-    isImportant: false,
-    status: {
-      deadline: null,
-      files: null,
-      comment: 'hello world !'
-    }
-  }
-];
+import testData from './testData';
 
 class Todo extends Component {
   constructor(props) {
@@ -47,20 +9,57 @@ class Todo extends Component {
     this.state = {
       tasks: []
     };
+    this.updateTask = this.updateTask.bind(this);
+    this.updateTaskStatus = this.updateTask.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      tasks: init_tasks
+      tasks: testData.todos
     });
   }
 
   toggleCheck() {}
 
+  updateTask(_task, _status) {
+    const id = _task.id;
+    const status = {
+      deadline:
+        _status.deadlineDate +
+        (!(_status.deadlineDate && _status.deadlineDate) || ' ') +
+        _status.deadlineTime,
+      files: _status.files || null,
+      comment: _status.comment || ''
+    };
+    const task = _task;
+    task.isEdit = false;
+    task.status = status;
+    this.setState(prev => prev.tasks.splice(id, 1, task));
+  }
+
+  updateTaskStatus(t, k, v) {
+    const id = t.id;
+    const task = t;
+    t[k] = v;
+    this.setState(prev => prev.tasks.splice(id, 1, task));
+  }
+
   render() {
-    const taskList = this.state.tasks.map((t, i) => (
-      <Task key={i} task={t} id={i} />
-    ));
+    const taskList = this.state.tasks
+      .sort(
+        (a, b) => a.isImportant * 2 - a.isDone < b.isImportant * 2 - b.isDone
+      )
+      .map((t, i) => {
+        t.id = i;
+        return (
+          <Task
+            key={i}
+            task={t}
+            updateTask={this.updateTask}
+            updateStatus={this.updateTaskStatus}
+          />
+        );
+      });
     const undoCnt = this.state.tasks.filter(t => !t.isDone).length;
 
     return (
